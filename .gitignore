@@ -173,7 +173,4 @@ tmp/
 .cache-main
 .scala_dependencies
 .worksheet
-.gitignore
 .idea/*
-src/test/
-usr-tcp232-search.iml
