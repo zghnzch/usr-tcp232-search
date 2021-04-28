@@ -1,4 +1,5 @@
 package cn.z.udp;
+import cn.z.constant.ConStr;
 import cn.z.util.LogUtil;
 import cn.z.util.TerminalManager;
 import io.netty.buffer.ByteBuf;
@@ -65,19 +66,17 @@ public class UdpSeverHandler extends SimpleChannelInboundHandler<DatagramPacket>
       //			9CA525862100 B1 0B3D6C27 1227 0700A8C0 8C4E 0100 A8C0 0000 C201 0300018400FFFFFF
       //      IP:PORT=192.168.001.109:10052 NAME:18352 MAC:9CA5258E3728 VER:4017   REMOTE:192.168.001.103:10001 tcpclient
       //      IP:PORT=C0A8016D:2744 NAME:47B0 MAC:9CA5258E3728 VER:0FB1 REMOTE:C0A80167:2711
-      //      IP:PORT=6D01A8C0:4427
-      //      MAC+?+REMOTE+STATIC-IP+STATIC-MASK
-      //      9CA5258E3728 B1 6701A8C0 1127 0700A8C0 4427 0100A8C0 0100C2010300018000FFFFFF
-      //      9CA5258E3728 B1 6701A8C0 1127 0700A8C0 4427 0100A8C0 0100C2010300018000FFFFFF
+      //      FF 24010000 C0A8016D 9CA5258E3728 B10F 0000 31 38 33 35 32 0000000000000000000000 F0
+      //      FF 24010000 C0A8016D 9CA5258E3728 B10F 0000 3138333532323232323231323334 00002C
+      //      FF 24010000 C0A8016D 9CA5258E3728 B10F 0000 3138333532323232323231323334 00002C
       //////////////////////////////////////////////////////////////////////
       log.info("receive:ip:" + packet.sender().getHostString() + ":port:" + packet.sender().getPort() + ":package:" + receive2);
-      //      String macStr = receive2.substring(0,12);
-      //      System.out.println("macStr = " + macStr);
-      //      String remoteIp = receive2.substring(14,22);
-      //      System.out.println("remoteIp = " + remoteIp);
-      //      String remotePort = receive2.substring(22,26);
-      //      System.out.println("remotePort = " + remotePort);
-      //      log.info("MAC:{},remoteIp{},remotePort{}", macStr,remoteIp,remotePort);
+      if (ConStr.FIRST_BYTE_STR.equals(receive2.substring(0, 2))) {
+        String macStr = receive2.substring(18, 30);
+        String verStr = receive2.substring(30, 34);
+        String deviceName = receive2.substring(38, 66);
+        log.info("macStr:{},verStr:{},deviceName:{}", macStr, verStr, deviceName);
+      }
     }
     catch (Exception e) {
       e.printStackTrace();
